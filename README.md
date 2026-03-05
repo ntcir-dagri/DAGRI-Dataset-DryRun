@@ -1,4 +1,4 @@
-# DAGRI サンプルデータ
+# DAGRI Dataset DryRun
 
 このリポジトリでは、DAGRI の各サブタスクで用いる Dry Run 用データを提供しています。タスクへの参加方法やタスクの詳細は <https://sites.google.com/view/dagri/home-ja> を参照ください。
 
