@@ -1,0 +1,9 @@
+sacrebleu==2.5.1
+mecab-python3==1.0.10
+unidic-lite==1.0.8
+torch==2.10.0
+transformers==5.1.0
+accelerate==1.12.0
+huggingface_hub==1.4.1
+safetensors==0.7.0
+qwen-vl-utils==0.0.14
