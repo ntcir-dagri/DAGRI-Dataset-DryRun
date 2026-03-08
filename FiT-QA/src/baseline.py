@@ -8,7 +8,7 @@ Input:
 Output:
 - Prediction JSONL where each row contains at least:
   - `status` ("ok" or "error")
-  - `prediction` (or user-specified prediction key)
+  - `answer` (or user-specified prediction key)
   - original QA row fields (kept as-is)
 
 This output format is compatible with evaluate_prediction_jsonl.py.
@@ -63,8 +63,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--prediction-key",
         type=str,
-        default="prediction",
-        help="出力時の予測テキストキー (default: prediction)",
+        default="answer",
+        help="出力時の予測テキストキー (default: answer)",
     )
     parser.add_argument(
         "--model",

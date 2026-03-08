@@ -3,8 +3,8 @@
 """Evaluate prediction JSONL with corpus BLEU and LLM-as-a-judge.
 
 This script merges:
-1) prediction JSONL (must include `prediction` by default), and
-2) QA JSONL (must include `question` and `answer` / `gold-answer`),
+1) prediction JSONL (must include `answer` by default), and
+2) QA JSONL (must include `question` and `answer`),
 
 then computes:
 - corpus BLEU (sacrebleu)
@@ -26,7 +26,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 import sacrebleu
 
 
-DEFAULT_ANSWER_KEYS: Tuple[str, ...] = ("answer", "gold-answer", "gold_answer")
+DEFAULT_ANSWER_KEYS: Tuple[str, ...] = ("answer",)
 DEFAULT_JUDGE_MODEL = "Qwen/Qwen3-VL-8B-Instruct"
 DEFAULT_JUDGE_TEMPLATE = (
     "You are an expert evaluator.\n"
@@ -108,8 +108,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--prediction-key",
         type=str,
-        default="prediction",
-        help="prediction 側の予測テキストキー (default: prediction)",
+        default="answer",
+        help="prediction 側の予測テキストキー (default: answer)",
     )
     parser.add_argument(
         "--question-key",
@@ -121,7 +121,7 @@ def parse_args() -> argparse.Namespace:
         "--answer-keys",
         type=str,
         default=",".join(DEFAULT_ANSWER_KEYS),
-        help="QA 側の正解候補キーをカンマ区切りで指定 (default: answer,gold-answer,gold_answer)",
+        help="QA 側の正解候補キーをカンマ区切りで指定 (default: answer)",
     )
     parser.add_argument(
         "--match-key",
