@@ -31,7 +31,7 @@ def download():
 
         cnt = 0
         while True:
-            time.sleep(1)
+            time.sleep(2)
             try:
                 h = hashlib.md5()
                 with urllib.request.urlopen(url) as r, open(pdf_file, "wb") as w:
@@ -43,6 +43,7 @@ def download():
                         h.update(chunk)
                 break
             except urllib.error.URLError as e:
+                time.sleep(60)
                 cnt += 1
                 if cnt >= 5:
                     raise e
@@ -256,8 +257,18 @@ PDF_LIST = [
     ("15-051-020", "https://web.archive.org/web/20251216135337if_/https://www.ja-chuetsu.or.jp/hp/wp-content/uploads/2023/04/R5%E5%A4%A7%E8%B1%86%E6%96%BD%E8%82%A5%E9%98%B2%E9%99%A4%E6%9A%A6.pdf", "d7ce67aedb924a1e1795135a360d1c91"),
     ("15-051-021", "https://web.archive.org/web/20251216135352if_/https://www.ja-chuetsu.or.jp/hp/wp-content/uploads/2024/04/%E2%98%85%E2%91%A5R6%E3%80%8C%E6%96%B0%E4%B9%8B%E5%8A%A9%E3%80%8D%E6%A0%BD%E5%9F%B9%E6%9A%A6%EF%BC%88%E6%85%A3%E8%A1%8C%EF%BC%89R6.03.07.pdf", "1cc4c6ad17ff7c4c47a68ff583eb2f6e"),
     ("15-051-022", "https://web.archive.org/web/20251216135416if_/https://www.ja-chuetsu.or.jp/hp/wp-content/uploads/2024/04/%E2%98%85%E2%91%A0%E4%BB%A4%E5%92%8C6%E5%B9%B4%E5%BA%A6%E3%82%A8%E3%82%B3%E3%83%BB5-5%E6%A0%BD%E5%9F%B9%E6%9A%A6%EF%BC%88%E9%95%B7%E5%B2%A1%E3%82%B3%E3%82%B7%E3%83%92%E3%82%AB%E3%83%AA%EF%BC%89R6.03.07.pdf", "757b9b3f572933639e65b67aa371e155"),
+    ("16-013-010", "https://web.archive.org/web/20251226094752if_/https://www.ja-inaba.or.jp/wp/wp-content/uploads/2025/04/f421b988db59ac36201602e8d8ced2cd.pdf", "64642d17f2739bd7211e32b5f88dc230"),
+    ("16-062-001", "https://web.archive.org/web/20251216135641if_/https://www.ja-imizuno.or.jp/assets/doc/agric-koyomi/koyomi-suito-r7-01.pdf?20250407", "17ec113cbc87f2ff7f67c1244c8c3056"),
+    ("18-079-001", "https://web.archive.org/web/20230330113019if_/https://www.pref.fukui.lg.jp/doc/fukui-noso/shienbu/guri-nnnasaibaihenotennkannsap_d/fil/tokubetusaibaimaininshou.pdf", "3d9fa22ff494aec336a4ac9005a7eb30"),
+    ("20-057-001", "https://web.archive.org/web/20251216113433if_/https://www.ja-nagano.iijan.or.jp/Me9wmZUs/wp-content/uploads/2023/06/b8e9e4b1b5a8db5c6e6f41c5bbc79a7a.pdf", "d74f9add10506c4b494eb567d7c26ff2"),
+    ("20-058-001", "https://web.archive.org/web/20251216113433if_/https://www.ja-nagano.iijan.or.jp/Me9wmZUs/wp-content/uploads/2025/01/ac893bbc8dbd5fdc9f0ef177c7794d76.pdf", "893e6127bdd14f2f1c52d2685f402f08"),
+    ("20-058-002", "https://web.archive.org/web/20231017104708if_/https://www.pref.nagano.lg.jp/nogi/midori/documents/05-2_yamanouchimanual.pdf", "58bb88836f4e1c985afe1a34825c2512"),
+    ("20-059-001", "https://web.archive.org/web/20251216113437if_/https://www.pref.nagano.lg.jp/sakuchi/nosei-aec/joho/gijutsu/documents/nakasenanarisaibaisisin.pdf", "ed01ab5a51157966be3dcab32292041c"),
+    ("20-060-001", "https://web.archive.org/web/20240527162828if_/https://www.infrc.or.jp/wxp/wp-content/uploads/2016/03/4-2_point_cucumber.pdf", "a291a07356cc27abb3ac2086b3a32bd0"),
+    ("21-061-002", "https://web.archive.org/web/20251216113502if_/https://www.zennoh.or.jp/gf/gifu-kome/safety/kijunPdf/r05_cal-akita.pdf", "bb9bf7ed5e77578ee3de2b39911f00c0"),
+    ("21-061-004", "https://web.archive.org/web/20251216113506if_/https://www.zennoh.or.jp/gf/gifu-kome/safety/kijunPdf/r05_cal-koshi-hida.pdf", "a30f7f6f5cb57a74ae54232045d02252"),
+    ("21-061-006", "https://web.archive.org/web/20251216135633if_/https://www.zennoh.or.jp/gf/gifu-kome/safety/kijunPdf/r05_cal-asahi.pdf", "9184a0e17d5a2ef966436ce918b42bcf"),
 ]
-
 
 if __name__ == "__main__":
     main()
