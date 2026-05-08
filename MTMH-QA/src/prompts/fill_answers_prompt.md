@@ -37,7 +37,7 @@ The <value> must be the final answer only. It must be one of:
 
 Formatting rules:
 - Preserve units and labels in the same style used by the source data and
-  examples, such as "蜀・", "h", "譛・", or "譛井ｸｭ譌ｬ".
+  examples, such as "月", "h", "円", "ヶ月", "粒" or "束".
 - If a numeric answer requires a unit, include the unit in the string.
 - If the question asks for multiple values without meaningful field names, use a
   list.
