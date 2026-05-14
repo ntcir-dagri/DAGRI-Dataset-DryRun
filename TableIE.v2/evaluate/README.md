@@ -1,39 +1,96 @@
-# SDK for DAGRI Subtask 1: Table IE 
+# dagri-subtask1-eval
 
-農業技術文書から情報抽出・構造化を行うタスクである
-DAGRI Subtask 1: Table IE の参加者向けの開発キットです。
-
-`dagri_subtask1_sdk` パッケージでは、主に以下の機能をサポートしています。
-
-- 抽出・構造化する経営類型、経営指標のデータ構造定義とデータクラスの提供
-- 提出ファイルの作成と検証
-
-データクラスの定義説明については [DATA_SCHEMA.md](./docs/DATA_SCHEMA.md) に詳細を記載しています。
-提出ファイルは、抽出/構造化した経営類型、経営指標をJSONLの形式に書き出します。
-sdkで提供するデータクラス及び書き出しのユーティリティを使用しますと、JSONの型、形式の不正を防ぎやすいです。
-また提出ファイルの形式に問題がないかのバリデータも同梱しています。提出前にファイル形式などの確認に活用ください。詳細は [SUBMISSION.md](./docs/SUBMISSION.md) を参照ください。
-
-また、`dagri_subtask1_baseline` パッケージにて、ベースラインプログラムを同梱しています。
-ベースラインプログラムの実装方針については [BASELINE_PIPELINE.md](./docs/BASELINE_PIPELINE.md) に詳細を記載しています。
-
+DAGRI Subtask 1 リーダーボード評価スクリプト
 
 ## セットアップ
 
-pythonのバージョン、パッケージ管理ツールである `uv` の使用を前提とします。
+パッケージ管理ツール `uv` が必要になります。
+pythonのバージョンは 3.13 以上を前提とし、
 
 ```bash
-uv sync --all-packages
+$ uv python pin <3.13以上>
+$ uv sync --all-packages
 ```
 
-またベースラインプログラムはOpenAI APIを使用しています。
-ベースラインプログラムを実行する場合は以下の環境変数を定義してください。
+## 使い方
+
+### コマンドラインツールとして使用する場合
+
+`-m dagri_subtask1_eval.main` でスクリプトとして実行することができます。
 
 ```bash
-export OPENAI_API_KEY="OpenAI APIのアクセスキー"
+$ uv run python -m dagri_subtask1_eval.main --help
+
+usage: dagri-subtask1-eval [-h] submission_file eval_file
+
+Evaluate a submission file against a ground-truth dataset.
+
+positional arguments:
+  submission_file  Path to the submission JSONL file.
+  eval_file        Path to the evaluation JSONL file.
+
+options:
+  -h, --help       show this help message and exit
 ```
 
-## INDEX
+コマンドライン引数として、
 
-* データクラス定義・抽出構造化項目: [DATA_SCHEMA.md](./docs/DATA_SCHEMA.md)
-* 提出ファイルの作成・バリデーション: [SUBMISSION.md](./docs/SUBMISSION.md)
-* ベースラインプログラム: [BASELINE_PIPELINE.md](./docs/BASELINE_PIPELINE.md)
+* 第1引数: 参加者が提出したファイル（JSONL）
+* 第2引数: 評価用ファイル（JSONL）
+
+### パッケージとしてimportする場合
+
+参加者の提出ファイルと評価用ファイルを比較し評価値を算出する、というユースケースを `dagri_subtask1_eval` パッケージで実装しています。
+評価の手続きは `dagri_subtask1_eval.usecase.evaluate_usecase` の `EvaluateUsecase` に実装しています。
+データの読み込み方や各項目の評価戦略を差し替えられるような実装となっていますが、
+標準のセットアップは `dagri_subtask1_eval.main.container` の `build_evaluate_usecase` で取得できます。
+
+```python
+>>> from dagri_subtask1_eval.main.container import build_evaluate_usecase
+>>> usecase = build_evaluate_usecase()
+```
+
+このユースケースの `execute` 関数をコールすると評価を行います。
+第1引数に参加者提出ファイル（JSONL）、第2引数に評価用データファイル（JSONL）をとり、評価値を返します。
+
+```python
+>>> submission_file_path: str = "/path/to/submission.jsonl
+>>> eval_file_path: str = "/path/to/evaluation.jsonl
+>>> eval_result = usecase.execute(submission_file_path, eval_file_path)
+```
+
+## 評価スクリプトの挙動について
+
+### 提出用ファイルに不備があった場合の挙動
+
+#### JSONL型に不正があった場合
+
+提出用ファイルは JSONL として 1 行ずつ読み込まれ、各行を `Submission` スキーマで検証します。空行は無視されます。
+
+提出用ファイルに必須項目の欠落や型不一致などの不備がある場合は、
+不正な行を見つけた時点では中断せず、ファイル全体を読み終えたあとに
+`DatasetValidationError` を送出します。
+エラーメッセージには、各不備について少なくとも次の情報が含まれます。
+
+* 行番号
+* 不備があった項目パス
+* 検証エラーメッセージ
+
+エラーメッセージの例:
+
+```text
+データセットに不正な値があります: line=1 path=management_types message=Input should be a valid array, line=1 path=management_indicators message=Input should be a valid array, line=2 path=id message=Field required
+```
+
+
+#### 提出データ中のサンプル数と評価データ中のサンプル数が一致しない場合
+
+提出用ファイルと評価用ファイルに含まれるサンプルの組
+`(prefecture_name, id)` が一致しない場合は、評価処理の開始前に `ValueError` を送出します。
+このとき、不足または余分だったサンプルキーの一覧がエラーメッセージに含まれます。
+
+エラーメッセージの例:
+
+```text
+提出データセットと正解データセットに含まれるサンプルが一致していません: [('tokyo', '1'), ('tokyo', '2')]
+```
