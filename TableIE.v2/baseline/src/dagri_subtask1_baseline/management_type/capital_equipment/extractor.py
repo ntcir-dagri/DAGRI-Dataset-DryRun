@@ -40,6 +40,7 @@ def extract_capital_equipment_by_management_type(
             f"{management_type_list}\n\n"
             "Extract capital equipment fields for each management type.\n"
             'Return JSON: {"items": [{"management_type_id": str, "capital_equipment": {...}}]}\n'
+            "amount can be integer or decimal (e.g. 1 or 1.5).\n"
             "Use both page image and OCR text. Prioritize visual table/chart information.\n"
             "Do not guess unknown values; set them to null.\n\n"
         ),

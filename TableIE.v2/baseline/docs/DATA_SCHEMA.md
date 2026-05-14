@@ -60,7 +60,7 @@
 | フィールド名 | 型 | 必須 | 説明 |
 |---|---|---|---|
 | `item_name` | `str \| None` | 任意 | 資本設備名 |
-| `amount` | `int \| None` | 任意 | 数量 |
+| `amount` | `int \| float \| None` | 任意 | 数量 |
 | `specification` | `str \| None` | 任意 | 仕様・特徴など |
 | `acquisition_cost` | `int \| None` | 任意 | 取得金額 |
 | `service_life` | `int \| None` | 任意 | 耐久年数 |

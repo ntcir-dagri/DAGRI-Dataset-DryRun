@@ -35,6 +35,39 @@ CLI 引数:
 - `--submission, -s`: 提出 JSONL の出力先
 - `--log-level`: `DEBUG / INFO / WARNING / ERROR`
 
+### 2.1 依存コマンドとインストール手順
+
+baseline では、PDF のテキスト抽出とページ画像化のために外部コマンドを利用します。
+
+- 必須: `pdftotext`
+利用箇所: `src/dagri_subtask1_baseline/shared/pdf_text_extractor.py`
+- 画像化で利用: `pdftoppm` または `pdftocairo`（どちらか）
+利用箇所: `src/dagri_subtask1_baseline/shared/pdf_images.py`
+実装では `pdftoppm` を優先し、見つからない場合は `pdftocairo` を自動利用
+
+インストール手順:
+
+- macOS（Homebrew）
+
+```bash
+brew install poppler
+```
+
+- Ubuntu
+
+```bash
+sudo apt update
+sudo apt install -y poppler-utils
+```
+
+実行前チェック:
+
+```bash
+pdftotext -v
+pdftoppm -v
+pdftocairo -v
+```
+
 入力探索規則:
 
 - `{{data_dir}}/{{prefecture_name}}/{{file_id}}.pdf`

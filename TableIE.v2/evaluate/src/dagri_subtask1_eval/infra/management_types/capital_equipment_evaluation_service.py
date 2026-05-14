@@ -134,8 +134,8 @@ class DefaultCapitalEquipmentEvaluationService(CapitalEquipmentEvaluationService
         self,
         index: int,
         field_name: str,
-        submission_value: str | int | None,
-        eval_value: str | int | None,
+        submission_value: str | int | float | None,
+        eval_value: str | int | float | None,
     ) -> CapitalEquipmentFieldEvaluation:
         return CapitalEquipmentFieldEvaluation(
             field_name=f"items[{index}].{field_name}",
@@ -159,8 +159,8 @@ class DefaultCapitalEquipmentEvaluationService(CapitalEquipmentEvaluationService
 
     def _evaluate_value(
         self,
-        submission_value: str | int | None,
-        eval_value: str | int | None,
+        submission_value: str | int | float | None,
+        eval_value: str | int | float | None,
     ) -> float:
         if submission_value is None and eval_value is None:
             return 1.0
@@ -168,7 +168,7 @@ class DefaultCapitalEquipmentEvaluationService(CapitalEquipmentEvaluationService
             return 0.0
         if isinstance(submission_value, str) and isinstance(eval_value, str):
             return self._calculate_string_similarity(submission_value, eval_value)
-        if isinstance(submission_value, int) and isinstance(eval_value, int):
+        if isinstance(submission_value, (int, float)) and isinstance(eval_value, (int, float)):
             return 1.0 if submission_value == eval_value else 0.0
 
         return 1.0 if submission_value == eval_value else 0.0

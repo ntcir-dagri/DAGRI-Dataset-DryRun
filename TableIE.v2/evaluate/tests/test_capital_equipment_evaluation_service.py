@@ -113,3 +113,48 @@ def test_evaluate_returns_empty_list_for_empty_inputs() -> None:
     evaluations = service.evaluate(CapitalEquipmentList(items=[]), CapitalEquipmentList(items=[]))
 
     assert evaluations == []
+
+
+def test_evaluate_treats_equal_float_amount_as_match() -> None:
+    service = DefaultCapitalEquipmentEvaluationService(evaluated_item_fields=("amount",))
+    submission_capital_equipment = CapitalEquipmentList(
+        items=[CapitalEquipment(item_name="散布機", amount=1.5)]
+    )
+    eval_capital_equipment = CapitalEquipmentList(
+        items=[CapitalEquipment(item_name="散布機", amount=1.5)]
+    )
+
+    evaluations = service.evaluate(submission_capital_equipment, eval_capital_equipment)
+
+    assert evaluations[0].field_name == "items[0].amount"
+    assert evaluations[0].score == 1.0
+
+
+def test_evaluate_treats_different_float_amount_as_mismatch() -> None:
+    service = DefaultCapitalEquipmentEvaluationService(evaluated_item_fields=("amount",))
+    submission_capital_equipment = CapitalEquipmentList(
+        items=[CapitalEquipment(item_name="散布機", amount=1.5)]
+    )
+    eval_capital_equipment = CapitalEquipmentList(
+        items=[CapitalEquipment(item_name="散布機", amount=1.6)]
+    )
+
+    evaluations = service.evaluate(submission_capital_equipment, eval_capital_equipment)
+
+    assert evaluations[0].field_name == "items[0].amount"
+    assert evaluations[0].score == 0.0
+
+
+def test_evaluate_treats_int_and_float_amount_as_equal() -> None:
+    service = DefaultCapitalEquipmentEvaluationService(evaluated_item_fields=("amount",))
+    submission_capital_equipment = CapitalEquipmentList(
+        items=[CapitalEquipment(item_name="散布機", amount=1)]
+    )
+    eval_capital_equipment = CapitalEquipmentList(
+        items=[CapitalEquipment(item_name="散布機", amount=1.0)]
+    )
+
+    evaluations = service.evaluate(submission_capital_equipment, eval_capital_equipment)
+
+    assert evaluations[0].field_name == "items[0].amount"
+    assert evaluations[0].score == 1.0
