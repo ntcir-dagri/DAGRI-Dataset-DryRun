@@ -22,10 +22,16 @@ sdkで提供するデータクラス及び書き出しのユーティリティ�
 pythonのバージョン、パッケージ管理ツールである `uv` の使用を前提とします。
 
 ```bash
-uv sync --all-packages
+uv sync --all-packages --all-groups
 ```
 
-またベースラインプログラムはOpenAI APIを使用しています。
+またpdftotextコマンドの実行ができる環境が必要です。
+
+```bash
+apt install xpdf
+```
+
+さらにベースラインプログラムはOpenAI APIを使用しています。
 ベースラインプログラムを実行する場合は以下の環境変数を定義してください。
 
 ```bash
