@@ -3,7 +3,7 @@ import pydantic
 
 class CapitalEquipment(pydantic.BaseModel):
     item_name: str | None = None
-    amount: int | None = None
+    amount: float | None = None
     specification: str | None = None
     acquisition_cost: int | None = None
     service_life: int | None = None

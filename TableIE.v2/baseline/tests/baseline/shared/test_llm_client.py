@@ -122,3 +122,19 @@ def test_request_json_multimodal_sends_text_format(tmp_path):
     )
 
     assert client.responses.last_kwargs["text"]["format"] == text_format
+
+
+def test_build_json_schema_format_allows_decimal_for_capital_equipment_amount():
+    class _CapitalEquipmentModel(pydantic.BaseModel):
+        amount: int | float | None = None
+
+    text_format = build_json_schema_format(
+        name="capital_equipment",
+        response_model=_CapitalEquipmentModel,
+    )
+    amount_schema = text_format["schema"]["properties"]["amount"]
+    any_of = amount_schema.get("anyOf", [])
+    types = {item.get("type") for item in any_of if isinstance(item, dict)}
+
+    assert "integer" in types
+    assert "number" in types

@@ -109,3 +109,27 @@ def test_diagnose_returns_error_for_missing_and_extra_keys(tmp_path):
     assert len(result.errors) == 2
     assert "不足" in result.errors[0]
     assert "余分" in result.errors[1]
+
+
+def test_diagnose_accepts_decimal_capital_equipment_amount(tmp_path):
+    (tmp_path / "dataset" / "test" / "tokyo").mkdir(parents=True)
+    (tmp_path / "dataset" / "test" / "tokyo" / "a.pdf").write_bytes(b"%PDF")
+
+    submission_file = tmp_path / "submission.jsonl"
+    payload = _minimal_submission("tokyo", "a")
+    payload["management_types"][0]["capital_equipment"] = {
+        "items": [{"item_name": "播種機", "amount": 1.5}]
+    }
+    submission_file.write_text(
+        json.dumps(payload, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    service = FileSystemSubmissionDiagnoseService()
+    result = service.diagnose(
+        submission_file=str(submission_file),
+        subtask1_data_dir=str(tmp_path / "dataset"),
+    )
+
+    assert result.is_valid is True
+    assert result.errors == []
