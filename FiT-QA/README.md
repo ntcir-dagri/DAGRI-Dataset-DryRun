@@ -24,16 +24,28 @@
 
 ## データセット仕様
 
-### 入力データ（train.jsonl）の例
+画像ファイル名のページ番号は 0 始まりです。たとえば PDF の先頭ページは `*_page_0.png` です。
+同梱の `download.py` もこの規則で PNG を生成します。
+
+### difficulty について
+
+各サンプルには、質問応答の難しさを表す `difficulty` が付与されています。`difficulty` は回答文字列の長さではなく、主に質問に答えるために必要な推論の複雑さを表します。
+
+- `easy`: 図表や本文中の単一箇所、またはごく局所的な範囲から答えを直接抽出できる質問で、LLMによる自動合成と人手によるpost-editで作成
+- `difficult`: 複数箇所の情報の突き合わせ、比較、数え上げ、期間計算、条件付き判断などを要する質問で、完全に人手のみで作成
+
+`difficulty` はデータ分析や難易度別評価のための補助情報として利用できます。
+
+### 入力データ（fit-qa_train_dryrun.jsonl）の例
 
 ```
-{"question_id": "train_1", "file_name": "02-021-002_page_1.png", "question": "4月の「整枝剪定」で、小玉を少なくするために行う作業は何か。", "page": 1, "image_width": 1754, "image_height": 2481, "bbox": [1350.48, 254.75, 342.82, 61.55], "answer": "ハサミを使って着果部位を整える", "synthetic": true, "difficulty": "easy"}
+{"question_id": "train_1", "file_name": "02-021-002_page_0.png", "question": "4月の「整枝剪定」で、小玉を少なくするために行う作業は何か。", "page": 0, "image_width": 1754, "image_height": 2481, "bbox": [1350.48, 254.75, 342.82, 61.55], "answer": "ハサミを使って着果部位を整える", "synthetic": true, "difficulty": "easy"}
 ```
 
-### 入力データ（test.jsonl）の例
+### 入力データ（fit-qa_test_dryrun.jsonl）の例
 
 ```
-{"question_id": "test_1", "file_name": "01-020-001_page_1.png", "page": 1, "question": "幼穂形成期以降に許可されている施肥の種類は？"}
+{"question_id": "test_1", "file_name": "01-020-001_page_0.png", "page": 0, "question": "幼穂形成期以降に許可されている施肥の種類は？"}
 ```
 
 ### 提出データの形式（jsonl形式）
