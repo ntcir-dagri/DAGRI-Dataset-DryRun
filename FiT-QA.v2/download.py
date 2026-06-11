@@ -60,7 +60,7 @@ def extract():
         with fitz.open(pdf_file) as doc:
             for page_num in range(len(doc)):
                 pix = doc.load_page(page_num).get_pixmap(dpi=150)
-                pix.save(PNG_DIR / f"{pdf_file.stem}_page_{page_num + 1}.png")
+                pix.save(PNG_DIR / f"{pdf_file.stem}_page_{page_num}.png")
 
 
 def main():
