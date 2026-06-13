@@ -203,8 +203,8 @@
 {"question_id": "test_267", "file_name": "15-051-021_page_0.png", "page": 0, "question": "出穂期の草丈はいくつですか"}
 {"question_id": "test_268", "file_name": "15-051-021_page_0.png", "page": 0, "question": "新之助の玄米タンパク質含有率の目標はどれくらいですか"}
 {"question_id": "test_269", "file_name": "15-051-021_page_0.png", "page": 0, "question": "収穫適期の積算温度の目安はいくつですか"}
-{"question_id": "test_384", "file_name": "30-096-001_page_0.png", "page": 0, "question": "収穫が行われる月は合計で何ヶ月ありますか？"}
-{"question_id": "test_386", "file_name": "30-096-001_page_0.png", "page": 0, "question": "播種とほ場準備が重なっているのは何月ですか？"}
+{"question_id": "test_384", "file_name": "30-096-001_page_5.png", "page": 5, "question": "収穫が行われる月は合計で何ヶ月ありますか？"}
+{"question_id": "test_386", "file_name": "30-096-001_page_5.png", "page": 5, "question": "播種とほ場準備が重なっているのは何月ですか？"}
 {"question_id": "test_387", "file_name": "40-016-001_page_0.png", "page": 0, "question": "播種から刈り取りまでの期間はおよそ何ヶ月ですか。"}
 {"question_id": "test_388", "file_name": "40-016-001_page_0.png", "page": 0, "question": "2回目の赤かび病防除は出穂の何日後ですか。"}
 {"question_id": "test_389", "file_name": "40-016-001_page_0.png", "page": 0, "question": "穂揃期追肥を葉面散布する場合は何と同時に行いますか。"}
@@ -415,9 +415,9 @@
 {"question_id": "test_611", "file_name": "44-127-010_page_0.png", "page": 0, "question": "栽培暦によると、8月20日にZボルドー粉剤DLを使用した場合、収穫は何月何日ですか？"}
 {"question_id": "test_612", "file_name": "44-127-010_page_0.png", "page": 0, "question": "田植を6/15に行う場合、6月に使用可能な除草剤は何種類ありますか？"}
 {"question_id": "test_613", "file_name": "44-127-010_page_0.png", "page": 0, "question": "側条施肥で慣行型の場合、10aあたりの化成肥料12-18-14の施肥量はいくつになりますか？"}
-{"question_id": "test_614", "file_name": "44-127-011_page_0.png", "page": 0, "question": "本田防除に使う農薬の内、穂肥と同時に使用する可能性があるものはいくつありますか？"}
-{"question_id": "test_615", "file_name": "44-127-011_page_0.png", "page": 0, "question": "9月中旬の収穫を目指し、田植えと同時に箱施薬を使用する場合、ウンカ類の防除ができる月は合計何ヶ月ありますか？"}
-{"question_id": "test_616", "file_name": "44-127-011_page_0.png", "page": 0, "question": "堆肥を毎年投入していて、化学肥料の使用を最低限にしたい場合、超一発DX（80日）の施肥量はいくつになりますか？"}
+{"question_id": "test_614", "file_name": "44-127-011_page_1.png", "page": 1, "question": "本田防除に使う農薬の内、穂肥と同時に使用する可能性があるものはいくつありますか？"}
+{"question_id": "test_615", "file_name": "44-127-011_page_1.png", "page": 1, "question": "9月中旬の収穫を目指し、田植えと同時に箱施薬を使用する場合、ウンカ類の防除ができる月は合計何ヶ月ありますか？"}
+{"question_id": "test_616", "file_name": "44-127-011_page_1.png", "page": 1, "question": "堆肥を毎年投入していて、化学肥料の使用を最低限にしたい場合、超一発DX（80日）の施肥量はいくつになりますか？"}
 {"question_id": "test_617", "file_name": "44-127-012_page_0.png", "page": 0, "question": "田植え・活着期に1キロ粉剤を使用する場合、その時期に使う除草剤は合計何kgですか？"}
 {"question_id": "test_618", "file_name": "44-127-012_page_0.png", "page": 0, "question": "田植晩期に田植えを行う場合、キマリテのフロアブルが使用可能な月は合計何ヶ月ありますか？"}
 {"question_id": "test_619", "file_name": "44-127-012_page_0.png", "page": 0, "question": "9月20日に収穫する場合、中期除草剤の液剤の内、8月に使用できるものはいくつありますか？"}
