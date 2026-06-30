@@ -76,3 +76,34 @@ def test_evaluate_returns_one_for_both_empty_lists() -> None:
     evaluation_by_name = {evaluation.field_name: evaluation for evaluation in evaluations}
 
     assert evaluation_by_name["crop_names"].score == 1.0
+
+
+def test_evaluate_treats_float_numeric_fields_as_match() -> None:
+    service = DefaultPremiseEvaluationService(
+        evaluated_fields=(
+            "cultivate_land",
+            "borrowed_cultivate_land",
+            "owned_cultivate_land",
+            "total_income",
+        )
+    )
+    submission_premise = Premise(
+        cultivate_land=100.5,
+        borrowed_cultivate_land=20.25,
+        owned_cultivate_land=80.25,
+        total_income=1000.75,
+    )
+    eval_premise = Premise(
+        cultivate_land=100.5,
+        borrowed_cultivate_land=20.25,
+        owned_cultivate_land=80.25,
+        total_income=1000.75,
+    )
+
+    evaluations = service.evaluate(submission_premise, eval_premise)
+    evaluation_by_name = {evaluation.field_name: evaluation for evaluation in evaluations}
+
+    assert evaluation_by_name["cultivate_land"].score == 1.0
+    assert evaluation_by_name["borrowed_cultivate_land"].score == 1.0
+    assert evaluation_by_name["owned_cultivate_land"].score == 1.0
+    assert evaluation_by_name["total_income"].score == 1.0

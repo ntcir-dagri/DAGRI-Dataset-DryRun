@@ -55,3 +55,19 @@ def test_read_collects_all_validation_issues_before_raising() -> None:
     assert issues[1].field_path == ("management_indicators",)
     assert issues[2].line_number == 2
     assert issues[2].field_path == ("id",)
+
+
+def test_read_accepts_float_numeric_fields(tmp_path: Path) -> None:
+    dataset_file = tmp_path / "submission_float.jsonl"
+    dataset_file.write_text(
+        '{"prefecture_name":"tokyo","id":"1","management_types":[{"id":"onion","name":"たまねぎ","premise":{"cultivate_land":100.5,"borrowed_cultivate_land":20.25,"owned_cultivate_land":80.25,"total_income":1000.75},"growing_area":{"items":[{"crop_name":"たまねぎ","area":10.5}]},"balance":{},"capital_equipment":{"items":[]}}],"management_indicators":[{"id":"onion","crop_name":"たまねぎ","balance":{},"work_schedule":{"term_unit":"上中下旬","items":[]},"work_technologies":{"items":[{"name":"播種","number_of_workers":2.5,"cost":1000.25}]}}]}\n',
+        encoding="utf-8",
+    )
+
+    reader = SubmissionDatasetReader()
+    dataset = reader.read(dataset_file)
+
+    first_item = dataset.items[0]
+    assert first_item.management_types[0].premise.cultivate_land == 100.5
+    assert first_item.management_types[0].growing_area.items[0].area == 10.5
+    assert first_item.management_indicators[0].work_technologies.items[0].number_of_workers == 2.5

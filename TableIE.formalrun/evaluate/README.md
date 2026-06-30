@@ -61,6 +61,26 @@ options:
 
 ## 評価スクリプトの挙動について
 
+### 配列要素（management_types / management_indicators）が未対応の場合
+
+`management_types` / `management_indicators` の要素が正解データ側と対応付けられない場合、
+未対応要素は 1 件の 0 点として扱うのではなく、その要素で本来評価される内部フィールド数に相当する件数の 0 点として加算されます。
+これにより、要素を提出しない場合が、要素を提出して内部フィールドを誤った場合より過大に有利になりにくくなります。
+また、`growing_area`、`capital_equipment`、`work_schedule`、`work_technologies` の内部配列要素も、類似度が一定以上の場合にのみ対応付けられます。
+
+### 内部配列アライメントの閾値設定
+
+内部配列のアライメントに使う類似度閾値は、以下の環境変数で個別に調整できます。未設定の場合はすべて `0.6` が使われます。
+
+* `DAGRI_GROWING_AREA_MIN_SIMILARITY`
+* `DAGRI_CAPITAL_EQUIPMENT_MIN_SIMILARITY`
+* `DAGRI_WORK_SCHEDULE_MIN_SIMILARITY`
+* `DAGRI_WORK_TECHNOLOGY_MIN_ITEM_SIMILARITY`
+* `DAGRI_WORK_TECHNOLOGY_MIN_EQUIPMENT_SIMILARITY`
+* `DAGRI_WORK_TECHNOLOGY_MIN_MATERIAL_SIMILARITY`
+
+設定値は `0.0` から `1.0` の範囲の小数を想定しています。
+
 ### 提出用ファイルに不備があった場合の挙動
 
 #### JSONL型に不正があった場合

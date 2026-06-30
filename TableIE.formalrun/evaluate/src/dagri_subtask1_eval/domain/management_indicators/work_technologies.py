@@ -17,9 +17,9 @@ class WorkTechnology(pydantic.BaseModel):
     description: str | None = None
     eqiupments: list[WorkTechnologyEquipment] | None = None
     materials: list[WorkTechnologyMaterial] | None = None
-    number_of_workers: int | None = None
+    number_of_workers: int | float | None = None
     total_number_of_hours: float | None = None
-    cost: int | None = None
+    cost: int | float | None = None
     note: str | None = None
 
 

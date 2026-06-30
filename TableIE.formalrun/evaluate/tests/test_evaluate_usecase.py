@@ -264,7 +264,7 @@ def test_execute_returns_average_score_when_samples_match() -> None:
 
     score = usecase.execute("submission.jsonl", "eval.jsonl")
 
-    assert score == 0.5
+    assert score == 4.5 / 13
 
 
 def test_execute_raises_error_when_samples_do_not_match() -> None:
@@ -293,6 +293,72 @@ def test_execute_raises_error_when_samples_do_not_match() -> None:
         assert "含まれるサンプルが一致していません" in str(e)
     else:
         raise AssertionError("ValueError was not raised")
+
+
+def test_execute_adds_field_count_penalty_for_unmatched_management_type() -> None:
+    submission = create_submission("tokyo", "1")
+    eval_data = create_eval_data("tokyo", "1")
+
+    usecase = EvaluateUsecase(
+        submission_dataset_reader=StubSubmissionDatasetReader(SubmissionDataset(items=[submission])),
+        eval_dataset_reader=StubEvalDatasetReader(EvalDataset(items=[eval_data])),
+        management_type_alignment_service=StubManagementTypeAlignmentService(
+            [
+                ManagementTypeAlignment(
+                    submission_management_type=None,
+                    eval_management_type=eval_data.management_types[0],
+                    similarity=0.0,
+                )
+            ]
+        ),
+        management_indicator_alignment_service=StubManagementIndicatorAlignmentService([]),
+        premise_evaluation_service=StubPremiseEvaluationService([1.0, 1.0]),
+        management_type_balance_evaluation_service=StubManagementTypeBalanceEvaluationService([1.0]),
+        growing_area_evaluation_service=StubGrowingAreaEvaluationService([1.0]),
+        capital_equipment_evaluation_service=StubCapitalEquipmentEvaluationService([1.0]),
+        management_indicator_balance_evaluation_service=StubManagementIndicatorBalanceEvaluationService(
+            []
+        ),
+        work_schedule_evaluation_service=StubWorkScheduleEvaluationService([]),
+        work_technology_evaluation_service=StubWorkTechnologyEvaluationService([]),
+    )
+
+    score = usecase.execute("submission.jsonl", "eval.jsonl")
+
+    assert score == 0.0
+
+
+def test_execute_adds_field_count_penalty_for_unmatched_management_indicator() -> None:
+    submission = create_submission("tokyo", "1")
+    eval_data = create_eval_data("tokyo", "1")
+
+    usecase = EvaluateUsecase(
+        submission_dataset_reader=StubSubmissionDatasetReader(SubmissionDataset(items=[submission])),
+        eval_dataset_reader=StubEvalDatasetReader(EvalDataset(items=[eval_data])),
+        management_type_alignment_service=StubManagementTypeAlignmentService([]),
+        management_indicator_alignment_service=StubManagementIndicatorAlignmentService(
+            [
+                ManagementIndicatorAlignment(
+                    submission_management_indicator=None,
+                    eval_management_indicator=eval_data.management_indicators[0],
+                    similarity=0.0,
+                )
+            ]
+        ),
+        premise_evaluation_service=StubPremiseEvaluationService([]),
+        management_type_balance_evaluation_service=StubManagementTypeBalanceEvaluationService([]),
+        growing_area_evaluation_service=StubGrowingAreaEvaluationService([]),
+        capital_equipment_evaluation_service=StubCapitalEquipmentEvaluationService([]),
+        management_indicator_balance_evaluation_service=StubManagementIndicatorBalanceEvaluationService(
+            [1.0, 1.0]
+        ),
+        work_schedule_evaluation_service=StubWorkScheduleEvaluationService([1.0]),
+        work_technology_evaluation_service=StubWorkTechnologyEvaluationService([1.0, 1.0, 1.0]),
+    )
+
+    score = usecase.execute("submission.jsonl", "eval.jsonl")
+
+    assert score == 0.0
 
 
 def create_submission(prefecture_name: str, id: str) -> Submission:

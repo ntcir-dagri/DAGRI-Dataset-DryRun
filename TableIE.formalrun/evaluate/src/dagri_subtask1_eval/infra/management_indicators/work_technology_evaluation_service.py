@@ -67,6 +67,9 @@ class DefaultWorkTechnologyEvaluationService(WorkTechnologyEvaluationService):
         evaluated_item_fields: Iterable[str] | None = None,
         evaluated_equipment_fields: Iterable[str] | None = None,
         evaluated_material_fields: Iterable[str] | None = None,
+        min_item_similarity: float = 0.6,
+        min_equipment_similarity: float = 0.6,
+        min_material_similarity: float = 0.6,
     ) -> None:
         self._evaluated_item_fields = tuple(
             self.DEFAULT_ITEM_FIELDS if evaluated_item_fields is None else evaluated_item_fields
@@ -81,6 +84,9 @@ class DefaultWorkTechnologyEvaluationService(WorkTechnologyEvaluationService):
             if evaluated_material_fields is None
             else evaluated_material_fields
         )
+        self._min_item_similarity = min_item_similarity
+        self._min_equipment_similarity = min_equipment_similarity
+        self._min_material_similarity = min_material_similarity
 
     def evaluate(
         self,
@@ -120,13 +126,11 @@ class DefaultWorkTechnologyEvaluationService(WorkTechnologyEvaluationService):
         candidate_pairs: list[tuple[float, int, int]] = []
         for submission_index, submission_item in enumerate(submission_items):
             for eval_index, eval_item in enumerate(eval_items):
-                candidate_pairs.append(
-                    (
-                        self._calculate_work_technology_similarity(submission_item, eval_item),
-                        submission_index,
-                        eval_index,
-                    )
+                similarity = self._calculate_work_technology_similarity(
+                    submission_item, eval_item
                 )
+                if similarity >= self._min_item_similarity:
+                    candidate_pairs.append((similarity, submission_index, eval_index))
 
         return self._build_alignment(
             candidate_pairs,
@@ -220,13 +224,9 @@ class DefaultWorkTechnologyEvaluationService(WorkTechnologyEvaluationService):
         candidate_pairs: list[tuple[float, int, int]] = []
         for submission_index, submission_item in enumerate(submission_items):
             for eval_index, eval_item in enumerate(eval_items):
-                candidate_pairs.append(
-                    (
-                        self._calculate_equipment_similarity(submission_item, eval_item),
-                        submission_index,
-                        eval_index,
-                    )
-                )
+                similarity = self._calculate_equipment_similarity(submission_item, eval_item)
+                if similarity >= self._min_equipment_similarity:
+                    candidate_pairs.append((similarity, submission_index, eval_index))
 
         return self._build_alignment(
             candidate_pairs,
@@ -254,13 +254,9 @@ class DefaultWorkTechnologyEvaluationService(WorkTechnologyEvaluationService):
         candidate_pairs: list[tuple[float, int, int]] = []
         for submission_index, submission_item in enumerate(submission_items):
             for eval_index, eval_item in enumerate(eval_items):
-                candidate_pairs.append(
-                    (
-                        self._calculate_material_similarity(submission_item, eval_item),
-                        submission_index,
-                        eval_index,
-                    )
-                )
+                similarity = self._calculate_material_similarity(submission_item, eval_item)
+                if similarity >= self._min_material_similarity:
+                    candidate_pairs.append((similarity, submission_index, eval_index))
 
         return self._build_alignment(
             candidate_pairs,

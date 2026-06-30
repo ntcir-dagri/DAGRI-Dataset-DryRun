@@ -151,4 +151,10 @@ class DefaultPremiseEvaluationService(PremiseEvaluationService):
     @staticmethod
     def _is_numeric_annotation(annotation: Any) -> bool:
         """注釈が数値型を表すかどうかを返す。"""
-        return annotation in (int, float)
+        if annotation in (int, float):
+            return True
+        origin = get_origin(annotation)
+        if origin is None:
+            return False
+        args = get_args(annotation)
+        return bool(args) and all(arg in (int, float) for arg in args)

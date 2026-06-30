@@ -38,10 +38,15 @@ class DefaultGrowingAreaEvaluationService(GrowingAreaEvaluationService):
 
     DEFAULT_ITEM_FIELDS = ("crop_name", "cultivars", "area", "area_unit")
 
-    def __init__(self, evaluated_item_fields: Iterable[str] | None = None) -> None:
+    def __init__(
+        self,
+        evaluated_item_fields: Iterable[str] | None = None,
+        min_similarity: float = 0.6,
+    ) -> None:
         self._evaluated_item_fields = tuple(
             self.DEFAULT_ITEM_FIELDS if evaluated_item_fields is None else evaluated_item_fields
         )
+        self._min_similarity = min_similarity
 
     def evaluate(
         self,
@@ -79,13 +84,9 @@ class DefaultGrowingAreaEvaluationService(GrowingAreaEvaluationService):
         candidate_pairs: list[tuple[float, int, int]] = []
         for submission_index, submission_item in enumerate(submission_items):
             for eval_index, eval_item in enumerate(eval_items):
-                candidate_pairs.append(
-                    (
-                        self._calculate_item_similarity(submission_item, eval_item),
-                        submission_index,
-                        eval_index,
-                    )
-                )
+                similarity = self._calculate_item_similarity(submission_item, eval_item)
+                if similarity >= self._min_similarity:
+                    candidate_pairs.append((similarity, submission_index, eval_index))
 
         candidate_pairs.sort(key=lambda pair: (-pair[0], pair[1], pair[2]))
 

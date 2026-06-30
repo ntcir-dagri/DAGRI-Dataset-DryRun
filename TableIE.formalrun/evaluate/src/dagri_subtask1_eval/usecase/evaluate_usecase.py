@@ -140,6 +140,7 @@ class EvaluateUsecase:
             alignment.submission_management_type is None
             or alignment.eval_management_type is None
         ):
+            penalty_scores = self._zero_scores_for_unmatched_management_type(alignment)
             logger.debug(
                 "management_type_alignment_unmatched",
                 extra={
@@ -152,10 +153,11 @@ class EvaluateUsecase:
                         else alignment.eval_management_type.id,
                         "alignment_similarity": alignment.similarity,
                         "score": 0.0,
+                        "unmatched_penalty_count": len(penalty_scores),
                     }
                 },
             )
-            return [0.0]
+            return penalty_scores
 
         scores: list[float] = []
         scores.extend(
@@ -219,6 +221,7 @@ class EvaluateUsecase:
             alignment.submission_management_indicator is None
             or alignment.eval_management_indicator is None
         ):
+            penalty_scores = self._zero_scores_for_unmatched_management_indicator(alignment)
             logger.debug(
                 "management_indicator_alignment_unmatched",
                 extra={
@@ -231,10 +234,11 @@ class EvaluateUsecase:
                         else alignment.eval_management_indicator.id,
                         "alignment_similarity": alignment.similarity,
                         "score": 0.0,
+                        "unmatched_penalty_count": len(penalty_scores),
                     }
                 },
             )
-            return [0.0]
+            return penalty_scores
 
         scores: list[float] = []
         scores.extend(
@@ -307,3 +311,73 @@ class EvaluateUsecase:
             )
             scores.append(evaluation.score)
         return scores
+
+    def _zero_scores_for_unmatched_management_type(
+        self, alignment: ManagementTypeAlignment
+    ) -> list[float]:
+        reference_management_type = (
+            alignment.eval_management_type
+            if alignment.eval_management_type is not None
+            else alignment.submission_management_type
+        )
+        if reference_management_type is None:
+            return [0.0]
+
+        penalty_count = 0
+        penalty_count += len(
+            self._premise_evaluation_service.evaluate(
+                reference_management_type.premise, reference_management_type.premise
+            )
+        )
+        penalty_count += len(
+            self._management_type_balance_evaluation_service.evaluate(
+                reference_management_type.balance, reference_management_type.balance
+            )
+        )
+        penalty_count += len(
+            self._growing_area_evaluation_service.evaluate(
+                reference_management_type.growing_area, reference_management_type.growing_area
+            )
+        )
+        penalty_count += len(
+            self._capital_equipment_evaluation_service.evaluate(
+                reference_management_type.capital_equipment,
+                reference_management_type.capital_equipment,
+            )
+        )
+        if penalty_count == 0:
+            penalty_count = 1
+        return [0.0] * penalty_count
+
+    def _zero_scores_for_unmatched_management_indicator(
+        self, alignment: ManagementIndicatorAlignment
+    ) -> list[float]:
+        reference_management_indicator = (
+            alignment.eval_management_indicator
+            if alignment.eval_management_indicator is not None
+            else alignment.submission_management_indicator
+        )
+        if reference_management_indicator is None:
+            return [0.0]
+
+        penalty_count = 0
+        penalty_count += len(
+            self._management_indicator_balance_evaluation_service.evaluate(
+                reference_management_indicator.balance, reference_management_indicator.balance
+            )
+        )
+        penalty_count += len(
+            self._work_schedule_evaluation_service.evaluate(
+                reference_management_indicator.work_schedule,
+                reference_management_indicator.work_schedule,
+            )
+        )
+        penalty_count += len(
+            self._work_technology_evaluation_service.evaluate(
+                reference_management_indicator.work_technologies,
+                reference_management_indicator.work_technologies,
+            )
+        )
+        if penalty_count == 0:
+            penalty_count = 1
+        return [0.0] * penalty_count
